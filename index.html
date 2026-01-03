@@ -1,38 +1,33 @@
 <!doctype html>
 <html lang="it">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Cocktail Roulette</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cocktail Roulette</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap">
-    <section class="card">
-      <h1>🍸 Cocktail Roulette</h1>
-      <p class="sub">Since Michele is an asshole and can't decide on a cocktail, then take this Roulette and shut up.</p>
+    <main class="wrap">
+        <section class="card">
+            <h1>🍸 Cocktail Roulette</h1>
+            <p class="sub">Since Michele is an asshole and can't decide on a cocktail, then take this Roulette and shut up.</p>
 
-      <div class="controls">
-        <button id="drawBtn" aria-label="Estrai un cocktail">Shoot</button>
-        <button id="copyBtn" class="ghost" aria-label="Copia negli appunti">Copy ingredients</button>
-      </div>
+            <div class="controls">
+                <!-- type="button" evita comportamenti strani se in futuro finisce dentro un form -->
+                <button id="drawBtn" type="button" aria-label="Estrai un cocktail" disabled>Shoot</button>
+                <button id="copyBtn" type="button" class="ghost" aria-label="Copia negli appunti" disabled>Copy ingredients</button>
+            </div>
 
-<div id="result" class="result" aria-live="polite" aria-atomic="true">
-  <div class="name">
-    <span class="dot"></span>
-    <span id="drinkName">—</span>
-  </div>
-  <ul id="ingredients"></ul>
-</div>
+            <div id="result" class="result" aria-live="polite" aria-atomic="true">
+                <div class="name">
+                    <span class="dot"></span>
+                    <span id="drinkName">—</span>
+                </div>
+                <ul id="ingredients"></ul>
+            </div>
+        </section>
+    </main>
 
-      <div class="footer">
-      </div>
-    </section>
-  </main>
-
-  <script src="app.js"></script>
+    <script defer src="app.js"></script>
 </body>
 </html>
-
-
-
