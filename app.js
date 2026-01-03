@@ -48,12 +48,14 @@ function renderError(ui, message) {
 }
 
 async function loadDataset() {
-  const res = await fetch("./cocktails.json", { cache: "no-store" });
+  const url = new URL("cocktails.json", window.location.href);
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossibile caricare cocktails.json (HTTP ${res.status})`);
   const data = await res.json();
   if (!Array.isArray(data) || data.length === 0) throw new Error("Dataset vuoto o invalido");
   return data;
 }
+
 
 // Bag shuffle
 function makeBag(n) {
@@ -138,3 +140,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   ui.drawBtn.addEventListener("click", onShoot);
   ui.copyBtn.addEventListener("click", onCopy);
 });
+
