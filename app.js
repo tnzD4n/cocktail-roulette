@@ -1,113 +1,140 @@
 "use strict";
 
-// Dataset cocktail (50 drink classici + popolari)
-const COCKTAILS = [
-  { name: "Negroni", ingredients: ["3 cl Gin","3 cl Campari","3 cl Vermouth Rosso"], notes:"Old fashioned, scorza arancia" },
-  { name: "Margarita", ingredients: ["5 cl Tequila","2 cl Triple Sec","2 cl Lime"], notes:"Coppetta con sale" },
-  { name: "Old Fashioned", ingredients: ["6 cl Bourbon","Zucchero","2 dash Angostura"], notes:"Build in glass" },
-  { name: "Mojito", ingredients: ["Rum bianco","Lime","Menta","Zucchero","Soda"], notes:"Highball" },
-  { name: "Daiquiri", ingredients: ["Rum bianco","Lime","Zucchero"], notes:"Coppetta" },
-  { name: "Martini Dry", ingredients: ["Gin","Vermouth dry"], notes:"Oliva o lemon twist" },
-  { name: "Whiskey Sour", ingredients: ["Whiskey","Limone","Zucchero"], notes:"Con albume opz." },
-  { name: "Caipirinha", ingredients: ["Cachaça","Lime","Zucchero"], notes:"Pestato" },
-  { name: "Piña Colada", ingredients: ["Rum bianco","Latte di cocco","Ananas"], notes:"Blended" },
-  { name: "Espresso Martini", ingredients: ["Vodka","Espresso","Liquore al caffè"], notes:"Shakerato" },
-  { name: "Americano", ingredients: ["Campari","Vermouth rosso","Soda"], notes:"Build in glass" },
-  { name: "Cosmopolitan", ingredients: ["Vodka","Triple Sec","Lime","Cranberry"], notes:"Shakerato" },
-  { name: "Mai Tai", ingredients: ["Rum chiaro","Rum scuro","Triple Sec","Orzata","Lime"], notes:"Tiki style" },
-  { name: "Manhattan", ingredients: ["Rye whiskey","Vermouth rosso","Angostura"], notes:"Mescolato" },
-  { name: "Gin Tonic", ingredients: ["Gin","Acqua tonica","Ghiaccio"], notes:"Highball" },
-  { name: "Paloma", ingredients: ["Tequila","Pompelmo","Lime","Soda"], notes:"Highball" },
-  { name: "Bloody Mary", ingredients: ["Vodka","Succo di pomodoro","Spezie","Tabasco","Sedano"], notes:"Brunch classico" },
-  { name: "Long Island Iced Tea", ingredients: ["Vodka","Gin","Rum","Tequila","Triple Sec","Cola"], notes:"Potente" },
-  { name: "Tom Collins", ingredients: ["Gin","Limone","Zucchero","Soda"], notes:"Highball" },
-  { name: "French 75", ingredients: ["Gin","Limone","Zucchero","Champagne"], notes:"Flute" },
-  { name: "Sidecar", ingredients: ["Cognac","Triple Sec","Limone"], notes:"Coppetta" },
-  { name: "Sazerac", ingredients: ["Rye whiskey","Assenzio (rinse)","Zucchero","Bitters"], notes:"New Orleans" },
-  { name: "Gin Fizz", ingredients: ["Gin","Limone","Zucchero","Soda"], notes:"Frizzante" },
-  { name: "Moscow Mule", ingredients: ["Vodka","Lime","Ginger beer"], notes:"Mug rame" },
-  { name: "Cuba Libre", ingredients: ["Rum","Cola","Lime"], notes:"Highball" },
-  { name: "Caipiroska", ingredients: ["Vodka","Lime","Zucchero"], notes:"Versione vodka della Caipirinha" },
-  { name: "Bellini", ingredients: ["Pesca","Prosecco"], notes:"Inventato all’Harry’s Bar" },
-  { name: "Kir Royale", ingredients: ["Crème de cassis","Champagne"], notes:"Flute" },
-  { name: "Irish Coffee", ingredients: ["Whiskey irlandese","Caffè","Zucchero","Panna"], notes:"Caldo" },
-  { name: "Mint Julep", ingredients: ["Bourbon","Menta","Zucchero","Ghiaccio tritato"], notes:"Kentucky Derby" },
-  { name: "Aperol Spritz", ingredients: ["Aperol","Prosecco","Soda"], notes:"Calice" },
-  { name: "Tequila Sunrise", ingredients: ["Tequila","Succo d’arancia","Grenadine"], notes:"Layered" },
-  { name: "Rum Punch", ingredients: ["Rum","Succhi tropicali","Grenadine"], notes:"Party style" },
-  { name: "Dark 'n' Stormy", ingredients: ["Rum scuro","Ginger beer","Lime"], notes:"Bermuda" },
-  { name: "Hurricane", ingredients: ["Rum scuro","Rum chiaro","Passion fruit","Succo lime","Sciroppo"], notes:"Tiki glass" },
-  { name: "Zombie", ingredients: ["Rum vari","Apricot brandy","Succhi frutta","Bitters"], notes:"Tiki potentissimo" },
-  { name: "Blue Lagoon", ingredients: ["Vodka","Blue Curaçao","Limonata"], notes:"Colorato" },
-  { name: "Singapore Sling", ingredients: ["Gin","Cherry brandy","Benedictine","Lime","Soda"], notes:"Highball" },
-  { name: "Planter’s Punch", ingredients: ["Rum scuro","Succo lime","Sciroppo zucchero","Bitters"], notes:"Giamaica" },
-  { name: "Boulevardier", ingredients: ["Bourbon","Campari","Vermouth rosso"], notes:"Negroni con bourbon" },
-  { name: "Rob Roy", ingredients: ["Scotch whisky","Vermouth rosso","Bitters"], notes:"Scozzese" },
-  { name: "White Lady", ingredients: ["Gin","Triple Sec","Succo limone"], notes:"Coppetta" },
-  { name: "Clover Club", ingredients: ["Gin","Succo limone","Sciroppo lampone","Albume"], notes:"Pre-Proibizionismo" },
-  { name: "Bramble", ingredients: ["Gin","Succo limone","Zucchero","Liquore more"], notes:"On the rocks" },
-  { name: "Aviation", ingredients: ["Gin","Maraschino","Succo limone","Crème de violette"], notes:"Classico raro" },
-  { name: "Vesper Martini", ingredients: ["Gin","Vodka","Lillet Blanc"], notes:"James Bond" },
-  { name: "Pornstar Martini", ingredients: ["Vodka alla vaniglia","Passion fruit","Prosecco"], notes:"Moderno" },
-  { name: "B52", ingredients: ["Kahlúa","Baileys","Grand Marnier"], notes:"Shot a strati" },
-  { name: "Grasshopper", ingredients: ["Crème de menthe","Crème de cacao","Panna"], notes:"Dolce" },
-  { name: "Harvey Wallbanger", ingredients: ["Vodka","Succo arancia","Galliano"], notes:"Anni 70" },
-  { name: "Pisco Sour", ingredients: ["Pisco","Limone","Zucchero","Albume","Bitters"], notes:"Sud America" }
-];
+/**
+ * Cocktail Roulette v2.0.0
+ * Dataset esterno: cocktails.json
+ */
 
-// --- Gestione random senza ripetizione ---
-let bag = [];
-function refillBag(){
-  bag = Array.from(COCKTAILS.keys());
-  for(let i = bag.length-1; i>0; i--){
-    const r = crypto.getRandomValues(new Uint32Array(1))[0] / 2**32;
-    const j = Math.floor(r*(i+1));
-    [bag[i],bag[j]]=[bag[j],bag[i]];
+function $(id) { return document.getElementById(id); }
+
+function safeText(x) { return typeof x === "string" ? x.trim() : ""; }
+
+function random01() {
+  if (typeof crypto !== "undefined" && typeof crypto.getRandomValues === "function") {
+    return crypto.getRandomValues(new Uint32Array(1))[0] / 2 ** 32;
   }
-  updateLeft();
+  return Math.random();
 }
 
-function draw(){
-  if(bag.length===0) refillBag();
-  const idx = bag.pop();
-  const drink = COCKTAILS[idx];
-  renderDrink(drink);
-  updateLeft();
+function hasRequiredUI(ui) {
+  return !!(ui.drawBtn && ui.copyBtn && ui.drinkName && ui.ingredients);
 }
 
-function renderDrink(d){
-  document.getElementById("drinkName").textContent = d.name;
-  const ul = document.getElementById("ingredients");
-  ul.replaceChildren();
-  d.ingredients.forEach(i=>{
+function setBusy(ui, busy) {
+  ui.drawBtn.disabled = busy;
+  ui.copyBtn.disabled = busy;
+  // Se vuoi 100% identico, commenta la riga sotto:
+  ui.drawBtn.textContent = busy ? "Loading…" : "Shoot";
+}
+
+function renderDrink(ui, drink) {
+  const name = safeText(drink?.name);
+  const ingredients = Array.isArray(drink?.ingredients) ? drink.ingredients : [];
+
+  ui.drinkName.textContent = name || "—";
+  ui.ingredients.replaceChildren();
+
+  ingredients.map(safeText).filter(Boolean).forEach((ing) => {
     const li = document.createElement("li");
-    li.textContent=i;
-    ul.appendChild(li);
+    li.textContent = ing;
+    ui.ingredients.appendChild(li);
   });
-  document.getElementById("notes").textContent = d.notes || "";
 }
 
-function updateLeft(){
-  document.getElementById("leftTag").textContent=`Rimasti: ${bag.length}/${COCKTAILS.length}`;
+function renderError(ui, message) {
+  ui.drinkName.textContent = "Errore";
+  ui.ingredients.replaceChildren();
+  console.error(message);
 }
 
-async function copyCurrent(){
-  const name = document.getElementById("drinkName").textContent;
-  if(!name || name==="—") return;
-  const ings = Array.from(document.querySelectorAll("#ingredients li")).map(li=>li.textContent);
-  const payload = `${name}\n${ings.map(i=>"• "+i).join("\n")}`;
-  try{
-    await navigator.clipboard.writeText(payload);
-    alert("Ingredienti copiati!");
-  }catch{
-    alert("Impossibile copiare");
+async function loadDataset() {
+  const res = await fetch("./cocktails.json", { cache: "no-store" });
+  if (!res.ok) throw new Error(`Impossibile caricare cocktails.json (HTTP ${res.status})`);
+  const data = await res.json();
+  if (!Array.isArray(data) || data.length === 0) throw new Error("Dataset vuoto o invalido");
+  return data;
+}
+
+// Bag shuffle
+function makeBag(n) {
+  const bag = Array.from({ length: n }, (_, i) => i);
+  for (let i = bag.length - 1; i > 0; i--) {
+    const j = Math.floor(random01() * (i + 1));
+    [bag[i], bag[j]] = [bag[j], bag[i]];
   }
+  return bag;
 }
 
-// Event listeners
-document.getElementById("drawBtn").addEventListener("click", draw);
-document.getElementById("copyBtn").addEventListener("click", copyCurrent);
+document.addEventListener("DOMContentLoaded", async () => {
+  const ui = {
+    drawBtn: $("drawBtn"),
+    copyBtn: $("copyBtn"),
+    drinkName: $("drinkName"),
+    ingredients: $("ingredients"),
+  };
 
-// Init
-refillBag();
-renderDrink({name:"—",ingredients:[],notes:"Clicca «Estrai» per iniziare"});
+  if (!hasRequiredUI(ui)) {
+    console.error("UI non trovata: controlla gli id in index.html", ui);
+    return;
+  }
+
+  let COCKTAILS = [];
+  let bag = [];
+  let isDrawing = false;
+
+  setBusy(ui, true);
+  try {
+    COCKTAILS = await loadDataset();
+    bag = makeBag(COCKTAILS.length);
+    renderDrink(ui, { name: "—", ingredients: [] });
+  } catch (e) {
+    renderError(ui, e?.message || "Errore caricamento dataset");
+    // lasciamo comunque i bottoni disabilitati se dataset non c'è
+    return;
+  } finally {
+    setBusy(ui, false);
+  }
+
+  function pickNext() {
+    if (bag.length === 0) bag = makeBag(COCKTAILS.length);
+    return COCKTAILS[bag.pop()];
+  }
+
+  function onShoot() {
+    if (isDrawing) return;
+    isDrawing = true;
+    setBusy(ui, true);
+
+    try {
+      const drink = pickNext();
+      if (!drink || !safeText(drink.name)) throw new Error("Cocktail invalido nel dataset");
+      renderDrink(ui, drink);
+    } catch (e) {
+      renderError(ui, e?.message || "Errore estrazione");
+    } finally {
+      setBusy(ui, false);
+      isDrawing = false;
+    }
+  }
+
+  async function onCopy() {
+    const name = safeText(ui.drinkName.textContent);
+    if (!name || name === "—" || name === "Errore") return;
+
+    const ings = Array.from(ui.ingredients.querySelectorAll("li"))
+      .map((li) => safeText(li.textContent))
+      .filter(Boolean);
+
+    const payload = `${name}\n${ings.map((i) => "• " + i).join("\n")}`;
+
+    try {
+      await navigator.clipboard.writeText(payload);
+      alert("Ingredienti copiati!");
+    } catch {
+      alert("Impossibile copiare");
+    }
+  }
+
+  ui.drawBtn.addEventListener("click", onShoot);
+  ui.copyBtn.addEventListener("click", onCopy);
+});
