@@ -23,8 +23,26 @@ function hasRequiredUI(ui) {
 function setBusy(ui, busy) {
   ui.drawBtn.disabled = busy;
   ui.copyBtn.disabled = busy;
-  // Se vuoi 100% identico, commenta la riga sotto:
   ui.drawBtn.textContent = busy ? "Loading…" : "Shoot";
+}
+
+/**
+ * Normalizza e valida un drink proveniente dal JSON.
+ * - impedisce dati "strani" (null, numeri, oggetti)
+ * - mette limiti di lunghezza (anti dataset rotto)
+ * - XSS: restiamo su textContent, ma qui rendiamo il dato "pulito"
+ */
+function normalizeDrink(x) {
+  const name = safeText(x?.name).slice(0, 80);
+  const raw = Array.isArray(x?.ingredients) ? x.ingredients : [];
+  const ingredients = raw
+    .map(safeText)
+    .filter(Boolean)
+    .slice(0, 30)
+    .map(s => s.slice(0, 120));
+
+  if (!name || ingredients.length === 0) return null;
+  return { name, ingredients };
 }
 
 function renderDrink(ui, drink) {
@@ -36,7 +54,7 @@ function renderDrink(ui, drink) {
 
   ingredients.map(safeText).filter(Boolean).forEach((ing) => {
     const li = document.createElement("li");
-    li.textContent = ing;
+    li.textContent = ing; // ✅ XSS-safe
     ui.ingredients.appendChild(li);
   });
 }
@@ -48,14 +66,17 @@ function renderError(ui, message) {
 }
 
 async function loadDataset() {
+  // ✅ path robusto per GitHub Pages / base path
   const url = new URL("cocktails.json", window.location.href);
+
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error(`Impossibile caricare cocktails.json (HTTP ${res.status})`);
+
   const data = await res.json();
   if (!Array.isArray(data) || data.length === 0) throw new Error("Dataset vuoto o invalido");
+
   return data;
 }
-
 
 // Bag shuffle
 function makeBag(n) {
@@ -91,7 +112,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderDrink(ui, { name: "—", ingredients: [] });
   } catch (e) {
     renderError(ui, e?.message || "Errore caricamento dataset");
-    // lasciamo comunque i bottoni disabilitati se dataset non c'è
     return;
   } finally {
     setBusy(ui, false);
@@ -108,8 +128,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     setBusy(ui, true);
 
     try {
-      const drink = pickNext();
-      if (!drink || !safeText(drink.name)) throw new Error("Cocktail invalido nel dataset");
+      const rawDrink = pickNext();
+      const drink = normalizeDrink(rawDrink);
+      if (!drink) throw new Error("Cocktail invalido nel dataset");
+
       renderDrink(ui, drink);
     } catch (e) {
       renderError(ui, e?.message || "Errore estrazione");
@@ -140,4 +162,3 @@ document.addEventListener("DOMContentLoaded", async () => {
   ui.drawBtn.addEventListener("click", onShoot);
   ui.copyBtn.addEventListener("click", onCopy);
 });
-
