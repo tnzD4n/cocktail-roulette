@@ -85,3 +85,40 @@ li:last-child { border-bottom:none; }
   padding:2px 6px;
   border-radius:6px;
 }
+
+/* --- Button states (prod hardening) --- */
+
+/* Disabled: niente hover/movimento e feedback visivo chiaro */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+/* Evita l'hover "lift" quando disabilitato */
+button:disabled:hover {
+  transform: none;
+}
+
+/* Focus accessibile (tastiera) */
+button:focus-visible {
+  outline: 3px solid #ffffff33;
+  outline-offset: 3px;
+}
+
+/* Active: micro feedback */
+button:active {
+  transform: translateY(0px) scale(0.99);
+}
+
+/* Ghost hover coerente */
+.ghost:hover {
+  transform: translateY(-1px);
+  border-color: #34406a;
+}
+.ghost:active {
+  transform: translateY(0px) scale(0.99);
+}
+.ghost:disabled:hover {
+  transform: none;
+}
